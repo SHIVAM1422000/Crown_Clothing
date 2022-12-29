@@ -1,29 +1,21 @@
-import React from 'react'
-import SignUp from '../../components/sign-up-form/sign-up-form.component';
-import { signInWithGooglePopup } from '../../utils/firebase/firebase.utility'
-import { createUserDocumentFromAuth } from '../../utils/firebase/firebase.utility';
-
-
-
+import React from "react";
+import SignUp from "../../components/sign-up-form/sign-up-form.component";
+import SignIn from "../../components/sign-in-form/sign-in-form.component";
+import {
+  signInWithGooglePopup,
+  createUserDocumentFromAuth,
+} from "../../utils/firebase/firebase.utility";
+import Button from "../../components/buttons/button.component";
+import './authentication.styles.scss'
 function Authentication() {
-  
-  const logGoogleUser = async () => {
-    const { user } = await signInWithGooglePopup();
-    try{
-      const userDocRef = await createUserDocumentFromAuth(user);
 
-    }catch(error){
-        console.log("Error while registring the user in the db "  , error);
-    }
-  } 
 
   return (
-    <div>
-       <h1>Already an User</h1>
-       <button onClick={logGoogleUser}>Sign In With Google</button>
-       <SignUp/>
+    <div className="authentication-container">
+      <SignIn />
+      <SignUp />
     </div>
-  )
+  );
 }
 
-export default Authentication
+export default Authentication;

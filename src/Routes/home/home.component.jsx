@@ -1,4 +1,3 @@
-import React, { Fragment } from 'react'
 import '../../components/category-item/category-item.styles.scss'
 import { Outlet } from 'react-router-dom'
 import Directory from '../../components/Directory/directory.component'

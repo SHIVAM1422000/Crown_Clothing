@@ -30,7 +30,7 @@ const SignIn = () => {
       
       const response=await signInAuthUserWithEmailAndPassword(email , password);
       console.log("From Sign In Try" , response);
-      setFormFields(defaultFormFields);
+      resetFormFields();
 
     } catch (error) {
 

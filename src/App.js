@@ -3,20 +3,8 @@ import Home from './Routes/home/home.component'
 import { Routes , Route } from 'react-router-dom'
 import Navigation from './components/Navigation/navigation.component'
 import Authentication from './Routes/authentication/authentication.component'
+import Shop from './components/shop/shop.component'
 
-
- 
-
-const Shop = () => {
-  
-  return ( 
-
-        <h1>Radhey Shyam</h1> 
-     
-  )
-
-   
-}
 
 
 const App = () => 

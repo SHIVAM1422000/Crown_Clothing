@@ -7,17 +7,14 @@ import "./navigation.styles.scss";
 import { useContext } from "react";
 import { UserContext } from "../../context/user.context";
 import { signOutUser } from "../../utils/firebase/firebase.utility";
+import CartIcon from "../cart-icon/cart-icon.components";
+import CartDropdown from "../cart-dropdown/cart-dropdown.component";
+import { CardContext } from "../../context/card.context";
 
 const Navigation = () => {
-
   const { currentUser } = useContext(UserContext);
-  
-  // const signOutHandler = async () => {
-  // const response = await signOutUser();
-  //  } 
+  const { isCartOpen } = useContext(CardContext);
 
-  // currentUser ? console.log("There is a user") : console.log("There is no user");
-  
   return (
     <Fragment>
       <div className="navigation">
@@ -29,15 +26,20 @@ const Navigation = () => {
             SHOP
           </Link>
 
-          { currentUser ? (
-            <span className="nav-link" onClick={signOutUser}> SIGN OUT </span>
+          {currentUser ? (
+            <span className="nav-link" onClick={signOutUser}>
+              {" "}
+              SIGN OUT{" "}
+            </span>
           ) : (
             <Link className="nav-link" to="/auth">
               SIGN IN
             </Link>
           )}
 
+          <CartIcon />
         </div>
+        {isCartOpen && <CartDropdown />}
       </div>
       <Outlet />
     </Fragment>

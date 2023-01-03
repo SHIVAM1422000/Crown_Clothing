@@ -47,21 +47,31 @@ export const CardContext = createContext({
   removeItemsFromCart: () => null,
   totalItems: 0,
   setTotalItems: () => null,
-  removeItemFromCheckout: () => null
+  removeItemFromCheckout: () => null,
+  totalPrice: 0,
+  setTotalPrice: () => null
 });
 
 export const CardProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
+  // to get total quantity changes
   useEffect(() => {
     const total_items = cartItems.reduce(
       (total, currentItem) => total + currentItem.quantity,
       0
     );
     setTotalItems(total_items);
-  });
+  },[cartItems]);
+
+  // to get total price changes
+  useEffect(()=>{
+    const total_cost= cartItems.reduce((total, currentItem)=> total + (currentItem.price * currentItem.quantity) ,0);
+    setTotalPrice(total_cost);
+  },[cartItems]);
 
   const addItemsToCart = (product) => {
     setCartItems(addCartItem(cartItems, product));
@@ -82,7 +92,8 @@ export const CardProvider = ({ children }) => {
     addItemsToCart,
     totalItems,
     removeItemsFromCart,
-    removeItemFromCheckout
+    removeItemFromCheckout,
+    totalPrice,
   };
 
   return <CardContext.Provider value={value}>{children}</CardContext.Provider>;

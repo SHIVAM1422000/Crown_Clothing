@@ -10,7 +10,6 @@ const ProductCard = ({ product }) => {
   const { name, price, imageUrl  } = product;
   
   const onClickHandler = () => {
-      // console.log("Clicked On Product: ", product.name);
       addItemsToCart(product);
   }
   

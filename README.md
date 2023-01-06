@@ -1,4 +1,18 @@
-# Getting Started with Create React App
+<h1> Application Preview </h1>
+
+
+<img width="1428" alt="Screenshot 2023-01-06 at 1 07 23 PM" src="https://user-images.githubusercontent.com/56889369/210953466-8b53d5b2-251f-4f98-8546-9890fc046e0f.png" class="preview">
+<br></br>
+<img width="1407" alt="Screenshot 2023-01-06 at 1 06 41 PM" src="https://user-images.githubusercontent.com/56889369/210953451-603c53af-c744-49f7-a270-52831828f391.png" class="preview">
+<br></br>
+<img width="1120" alt="Screenshot 2023-01-06 at 1 07 32 PM" src="https://user-images.githubusercontent.com/56889369/210953473-2a47f036-7aae-40f3-b780-0818bbb54958.png" class="preview">
+<br></br>
+<img width="1246" alt="Screenshot 2023-01-06 at 1 07 58 PM" src="https://user-images.githubusercontent.com/56889369/210953486-e8029384-eefc-4f9b-8e05-52ae468b959b.png" class="preview">
+
+
+
+# Method to use locally
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

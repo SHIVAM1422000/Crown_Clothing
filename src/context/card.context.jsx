@@ -70,6 +70,8 @@ export const CardProvider = ({ children }) => {
     );
 
     // dispatching new action with proper payloads to add/ remove new cart item
+
+
     dispatch({
       type: CART_ACTION_TYPES.SET_CART_ITEMS,
       payload: {

@@ -1,100 +1,173 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useReducer } from "react";
+import { createAction } from '../utils/reducer/reducer.utils';
 
-// helper function to add a new item
-const addCartItem = (cartItems, product) => {
-  let isPresent = false;
-  for (let i = 0; i < cartItems.length; i++) {
-    if (cartItems[i].id === product.id) {
-      isPresent = true;
-      cartItems[i].quantity += 1;
-    }
-  }
 
-  if (!isPresent) {
-    const newArray = [...cartItems, { ...product, quantity: 1 }];
-    return newArray;
-  }
-
-  return [...cartItems];
+// action types
+const CART_ACTION_TYPES = {
+  SET_CART_ITEMS: "SET_CART_ITEMS",
+  SET_IS_CART_OPEN: "SET_IS_CART_OPEN",
 };
 
-//helper function to remove a cart item
-const removeCartItem = (cartItems, product) => {
-  const isPresent = cartItems.find((item) => item.id === product.id);
-  const newArray = cartItems.filter((item) => item.id !== product.id);
-  if (isPresent.quantity > 1) {
-    const temp = [
-      ...newArray,
-      { ...product, quantity: isPresent.quantity - 1 },
-    ];
-    return temp;
-  }
-
-  return newArray;
-};
-
-// helper function to remove a checkout item
-const removeCheckoutItem = (cartItems, product) => {
-    const newArray = cartItems.filter((item) => item.id !== product.id);
-    return newArray;
-}
-
-export const CardContext = createContext({
+// adding useReducer function for card/cart context
+const INITIAL_STATE = {
   isCartOpen: false,
-  setIsCartOpen: () => null,
   cartItems: [],
+  totalItems: 0,
+  totalPrice: 0,
+};
+
+//returns new state after handeling the action
+const cartReducer = (state, action) => {
+  // we will make a generic function that sends a payload which conatains updated cartItems, totalPrice, totalItems
+  const { type, payload } = action;
+
+  switch (type) {
+    case CART_ACTION_TYPES.SET_CART_ITEMS:
+      return {
+        ...state,
+        ...payload,
+      };
+
+    case CART_ACTION_TYPES.SET_IS_CART_OPEN:
+      return {
+        ...state,
+        isCartOpen: payload,
+      };
+
+    default:
+      throw new Error(`Unhandeled type error : ${type} from cartReducer`);
+  }
+};
+
+// Card Context Property
+export const CardContext = createContext({
+  setIsCartOpen: () => null,
   addItemsToCart: () => null,
   removeItemsFromCart: () => null,
-  totalItems: 0,
-  setTotalItems: () => null,
   removeItemFromCheckout: () => null,
+  isCartOpen: false,
+  cartItems: [],
+  totalItems: 0,
   totalPrice: 0,
-  setTotalPrice: () => null
 });
 
 export const CardProvider = ({ children }) => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [state, dispatch] = useReducer(cartReducer, INITIAL_STATE);
+  const { cartItems, totalItems, totalPrice, isCartOpen } = state;
 
-  // to get total quantity changes
-  useEffect(() => {
-    const total_items = cartItems.reduce(
+  // reducer helper function to make newCartItem, cartTotal, totalPrice
+  const updateCartItemReducer = (cartItems) => {
+    //generate new cart item count
+    const new_total_items = cartItems.reduce(
       (total, currentItem) => total + currentItem.quantity,
       0
     );
-    setTotalItems(total_items);
-  },[cartItems]);
 
-  // to get total price changes
-  useEffect(()=>{
-    const total_cost= cartItems.reduce((total, currentItem)=> total + (currentItem.price * currentItem.quantity) ,0);
-    setTotalPrice(total_cost);
-  },[cartItems]);
+    //generate new cart items total price
+    const new_total_cost = cartItems.reduce(
+      (total, currentItem) => total + currentItem.price * currentItem.quantity,
+      0
+    );
 
+    // dispatching new action with proper payloads to add/ remove new cart item
+    dispatch({
+      type: CART_ACTION_TYPES.SET_CART_ITEMS,
+      payload: {
+        cartItems: cartItems,
+        totalItems: new_total_items,
+        totalPrice: new_total_cost,
+      },
+    });
+  };
+
+  // dispatching to toggle the cart button on and off
+  const setIsCartOpen = (bool) => {
+    /**
+     This method of dispatch was modified using an helper function createAction
+           dispatch({ type: CART_ACTION_TYPES.SET_IS_CART_OPEN, payload: bool });
+     Either of the ways are good
+    */
+
+      dispatch(createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN,bool))     
+
+
+
+  };
+
+  // These methods call the helper function internally to execute the task
+
+  //add one item
   const addItemsToCart = (product) => {
-    setCartItems(addCartItem(cartItems, product));
+    const newCartItems = addCartItem(cartItems, product);
+    updateCartItemReducer(newCartItems);
   };
 
+  // remove one item
   const removeItemsFromCart = (product) => {
-    setCartItems(removeCartItem(cartItems, product));
+    const newCartItems = removeCartItem(cartItems, product);
+    updateCartItemReducer(newCartItems);
   };
 
+  //complete removal of item
   const removeItemFromCheckout = (product) => {
-    setCartItems(removeCheckoutItem(cartItems, product));
+    const newCartItems = removeCheckoutItem(cartItems, product);
+    updateCartItemReducer(newCartItems);
   };
 
   const value = {
+    cartItems,
+    totalItems,
+    totalPrice,
     isCartOpen,
     setIsCartOpen,
-    cartItems,
     addItemsToCart,
-    totalItems,
     removeItemsFromCart,
     removeItemFromCheckout,
-    totalPrice,
   };
 
   return <CardContext.Provider value={value}>{children}</CardContext.Provider>;
+};
+
+/**     HELPER FUNCTIONS          */
+
+// helper function to add a new item one by one :-
+const addCartItem = (cartItems, productToAdd) => {
+  const existingCartItem = cartItems.find(
+    (cartItem) => cartItem.id === productToAdd.id
+  );
+
+  if (existingCartItem) {
+    return cartItems.map((cartItem) =>
+      cartItem.id === productToAdd.id
+        ? { ...cartItem, quantity: cartItem.quantity + 1 }
+        : cartItem
+    );
+  }
+
+  return [...cartItems, { ...productToAdd, quantity: 1 }];
+};
+
+//helper function to remove a cart item one by one :-
+const removeCartItem = (cartItems, cartItemToRemove) => {
+  // find the cart item to remove
+  const existingCartItem = cartItems.find(
+    (cartItem) => cartItem.id === cartItemToRemove.id
+  );
+
+  // check if quantity is equal to 1, if it is remove that item from the cart :-
+  if (existingCartItem.quantity === 1) {
+    return cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id);
+  }
+
+  // return back cartitems with matching cart item with reduced quantity :-
+  return cartItems.map((cartItem) =>
+    cartItem.id === cartItemToRemove.id
+      ? { ...cartItem, quantity: cartItem.quantity - 1 }
+      : cartItem
+  );
+};
+
+// helper function to remove a checkout item completely
+const removeCheckoutItem = (cartItems, product) => {
+  return cartItems.filter((item) => item.id !== product.id);
 };

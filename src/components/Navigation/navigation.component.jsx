@@ -12,10 +12,12 @@ import { CardContext } from "../../context/card.context";
 // Using Styled Component :
 import "./navigation.styles.js";
 import { NavigationContainer, NavLinkContainer, LogoContainer, NavLink } from "./navigation.styles.js";
+import { useSelector } from "react-redux";
 
 
 const Navigation = () => {
-  const { currentUser } = useContext(UserContext);
+  // const { currentUser } = useContext(UserContext);
+  const currentUser = useSelector((state) => state.user.currentUser) 
   const { isCartOpen } = useContext(CardContext);
 
   return (

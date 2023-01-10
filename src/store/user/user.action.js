@@ -1,5 +1,4 @@
 // dispatching activities related to user are triggered from here
-
 import { USER_ACTION_TYPES } from "./user.action.types";
 import { createAction } from '../../utils/reducer/reducer.utils';
 

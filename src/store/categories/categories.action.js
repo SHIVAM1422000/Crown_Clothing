@@ -3,8 +3,9 @@ import { createAction } from '../../utils/reducer/reducer.utils';
 import { CATEGORIES_ACTION_TYPES } from './categories.action.types';
 
 
-export const setCategoriesMap = (categoriesMap) => {
+export const setCategories = (categoriesArray) => {
 
-   return createAction(CATEGORIES_ACTION_TYPES.SET_CATEGORIES_MAP , categoriesMap);
+   const action = createAction(CATEGORIES_ACTION_TYPES.SET_CATEGORIES , categoriesArray);
+   return action
 
 }

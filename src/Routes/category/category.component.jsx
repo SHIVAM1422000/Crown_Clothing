@@ -5,14 +5,14 @@ import React from "react";
 import ProductCard from "../../components/product-card/product-card.component";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
-import { selectCategories, selectCategoriesMap } from '../../store/categories/categories.selector';
+import { selectCategories } from '../../store/categories/categories.selector';
 
 const Category = () => {
   // accessing category from the url or the route inside route/shop.component.jsx
   const { category } = useParams();
   //fetching categories map from useSelector
   const categoriesMap =  useSelector(selectCategories);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(categoriesMap[category]);
 
   // use effect to change products whenever category or category map changes
   useEffect(() => {

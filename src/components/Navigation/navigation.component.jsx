@@ -6,17 +6,19 @@ import { useContext } from "react";
 import { signOutUser } from "../../utils/firebase/firebase.utility";
 import CartIcon from "../cart-icon/cart-icon.components";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
-import { CardContext } from "../../context/card.context";
 // Using Styled Component :
 import "./navigation.styles.js";
 import { NavigationContainer, NavLinkContainer, LogoContainer, NavLink } from "./navigation.styles.js";
 import { useSelector } from "react-redux";
+import { selectIsCartOpen } from "../../store/cart/cart.selector";
+
 
 
 const Navigation = () => {
   // const { currentUser } = useContext(UserContext);
   const currentUser = useSelector((state) => state.user.currentUser) 
-  const { isCartOpen } = useContext(CardContext);
+  const isCartOpen  = useSelector(selectIsCartOpen)
+
 
   return (
     <Fragment>

@@ -1,4 +1,3 @@
-
 import { createAction } from '../../utils/reducer/reducer.utils';
 import { CATEGORIES_ACTION_TYPES } from './categories.action.types';
 

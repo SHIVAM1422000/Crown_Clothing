@@ -10,10 +10,14 @@ import { setCategories } from '../../store/categories/categories.action';
 
 const Shop = () => {
 
+  console.log("Calling Shop Component")
+
   const dispatch = useDispatch();
   // dispatch is never changing 
   useEffect(() => {
 
+
+    console.log("Calling use Effect from shop component to dispatch(setCategories(categoriesArray))")
     const getcategoryMap = async () => {
       const categoriesArray = await getCategoriesAndDocuments("categories");
       dispatch(setCategories(categoriesArray))

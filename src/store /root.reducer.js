@@ -6,5 +6,4 @@ export const rootReducer = combineReducers( {
 
 user : userReducer,
 
-
 })

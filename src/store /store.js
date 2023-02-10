@@ -5,6 +5,21 @@ import { compose, legacy_createStore as createStore, applyMiddleware } from "red
 import logger from "redux-logger";
 import { rootReducer } from "./root.reducer";
 
+const myLogger = (store) => (next) => (action) => {
+    if(!action) return next(action)
+
+    console.log('type: ' , action.type)
+    console.log('payload: ', action.payload)
+    console.log('current-state: ' , store.getState())
+
+    //pass action to next middlewares and finally to the reducer 
+    next(action)
+
+    // after state is being passed to the components
+
+    console.log('new-state: ' , store.getState())
+
+}
 
 const persistConfig = {
     key:'root',
@@ -17,10 +32,10 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 
 
-const middleWares=[process.env.NODE_ENV=="development" && logger].filter(Boolean)
+const middleWares=[process.env.NODE_ENV==="development" && myLogger].filter(Boolean)
 
 const composeEnhancers =
-  (process.env.NODE_ENV=="development" && typeof window !== 'undefined' &&
+  (process.env.NODE_ENV==="development" && typeof window !== 'undefined' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose;
 
